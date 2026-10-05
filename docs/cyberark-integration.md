@@ -48,7 +48,8 @@ Controlled entirely by server configuration (never by the client):
 ```
 
 No example values are invented here — they must come from the actual CyberArk configuration,
-confirmed with the CyberArk team, per the explicit instruction not to invent the-customer-organization values.
+confirmed with the CyberArk team, per the explicit instruction not to invent the deploying
+organization's real values.
 
 ## Open questions for the CyberArk team
 

@@ -157,7 +157,7 @@ Per profile, before writing selection logic, the following must be captured for 
 certificates issued to Windows devices (Intune SCEP/PKCS profile, or corporate PKI template):
 
 - Certificate store (expected: `LocalMachine\My`, accessible from SYSTEM — **REQUIRES CUSTOMER
-  VALIDATION**, not yet confirmed which profile the-customer-organization devices actually receive).
+  VALIDATION**, not yet confirmed which profile the deploying organization's devices actually receive).
 - Issuer DN and chain depth (Root → [SubCA...] → leaf).
 - Subject DN and SAN entries (URI/DNS/CN — matters for device-ID extraction, see §5 above).
 - EKU list (must include Client Authentication `1.3.6.1.5.5.7.3.2`).

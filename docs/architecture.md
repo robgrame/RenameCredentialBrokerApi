@@ -5,8 +5,9 @@ Status tags used throughout this document and the rest of `docs/`:
 - **VERIFIED REQUIREMENT** — stated explicitly in the user's prompt or confirmed from inspected code.
 - **PROPOSED DESIGN** — this team's recommendation; not yet confirmed by the customer.
 - **OPEN DECISION** — intentionally left open per prompt §33; requires a decision before build-out.
-- **REQUIRES CUSTOMER VALIDATION** — depends on facts about the-customer-organization's environment not available to
-  this design (CyberArk interface, PKI template, Graph tenant permissions, network connectivity).
+- **REQUIRES CUSTOMER VALIDATION** — depends on facts about the deploying organization's
+  environment not available to this design (CyberArk interface, PKI template, Graph tenant
+  permissions, network connectivity).
 
 ## 1. Proposed architecture — **PROPOSED DESIGN**
 
@@ -152,8 +153,8 @@ Broker                                          CyberArk
 
 This sequence is implemented against `ICyberArkClient` only. No concrete CyberArk product
 integration is written until the open questions in `docs/cyberark-integration.md` §"Open questions
-for the CyberArk team" are answered — per the explicit instruction not to fabricate the-customer-organization
-infrastructure details.
+for the CyberArk team" are answered — per the explicit instruction not to fabricate the
+deploying organization's infrastructure details.
 
 ## 6. Certificate trust model — see `docs/certificate-options.md`
 
@@ -191,7 +192,7 @@ or spoofing endpoint).
 | [0003](adr/0003-credential-exposure-vs-server-side-execution.md) | Return password to endpoint (A) vs. server-side privileged execution (B) | A implemented now per requirement; B documented for future evaluation |
 | [0004](adr/0004-cyberark-interface-and-auth.md) | Exact CyberArk interface + authentication mechanism | OPEN DECISION / REQUIRES CUSTOMER VALIDATION |
 
-## 16. Exact questions requiring the-customer-organization team input
+## 16. Exact questions requiring the deploying organization's team input
 
 Consolidated list (detailed versions live alongside each relevant doc):
 
