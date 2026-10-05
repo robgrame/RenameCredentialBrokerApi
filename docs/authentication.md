@@ -2,8 +2,8 @@
 
 This document fulfils prompt section 4 (reuse analysis) and section 5/6 (mTLS + device identity
 design). Every behavior attributed to LogCollector below was verified by reading the actual source
-in `C:\Users\robgrame\source\repos\LogCollector` (commit state as of this session) — nothing here is
-assumed or invented.
+of [`robgrame/LogCollector`](https://github.com/robgrame/LogCollector) (public repository, commit
+state as of this session) — nothing here is assumed or invented.
 
 ## 1. What LogCollector already does (verified)
 
