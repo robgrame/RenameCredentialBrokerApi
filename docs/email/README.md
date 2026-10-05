@@ -1,40 +1,41 @@
 # Architecture overview email template
 
-This folder contains a ready-to-send email explaining the Device Credential
-Broker architecture, with emphasis on the device authentication/authorization
-pipeline.
+`DeviceCredentialBroker-Architecture-Email.eml` is a ready-to-send email
+(standard RFC 822 `.eml`, HTML body) explaining the Device Credential Broker
+architecture, with emphasis on the device authentication/authorization
+pipeline. `From`/`To`/`Subject` are placeholders to be replaced before
+sending.
 
-## Why two files?
+## Why double-clicking it looks "read-only"
 
-- **`DeviceCredentialBroker-Architecture-Email.eml`** — a full `.eml` message
-  (headers + HTML body). Most mail clients (Outlook included) open a
-  double-clicked `.eml` as if it were an **already-sent/received message**,
-  so the `From`, `To`, and sometimes the body are shown **read-only** and
-  cannot be edited in place.
-- **`DeviceCredentialBroker-Architecture-Email-Body.html`** — the same
-  content as a **standalone HTML file**, with no email headers. Use this one
-  if your mail client won't let you edit the `.eml` directly.
+Double-clicking an `.eml` opens it as a **preview of a received message**,
+so most clients lock `From`/`To`/`Subject` and the body. This is expected
+`.eml` behavior, not a problem with the file — the fix is to bring it into
+your mail client as a **draft** rather than previewing it.
 
-## How to use it (editable)
+## How to make it editable
 
-**Option A — fix the `.eml` in Outlook (classic/desktop Outlook):**
-1. Double-click the `.eml` to open it.
-2. Go to the message ribbon → **Actions** → **Edit Message** (or **Other
-   Actions → Edit Message** depending on version). This unlocks `To`,
-   `From`/account selection, `Subject`, and the body for editing.
-3. Edit the recipient, pick your sending account, adjust the subject, and
-   send.
+**Outlook (classic/desktop) — recommended, most reliable:**
+1. Open Outlook and go to your **Drafts** folder.
+2. In File Explorer, **drag and drop** `DeviceCredentialBroker-Architecture-Email.eml`
+   directly onto the Drafts folder (or onto the message list while Drafts is
+   open).
+3. Outlook imports it as a real draft: double-click it from Drafts and
+   `From` (sending account), `To`, `Subject`, and the body are now fully
+   editable, exactly like any email you started yourself.
+4. Edit the placeholders, then send.
 
-**Option B — copy/paste the HTML body into a brand-new email (works in any
-client, including new Outlook / OWA, which do not expose "Edit Message"):**
-1. Open `DeviceCredentialBroker-Architecture-Email-Body.html` in a web
-   browser (double-click it).
-2. Select all the rendered content (`Ctrl+A`) and copy it (`Ctrl+C`).
-3. In your mail client, start a **new email** (so `To`/`From`/`Subject` are
-   natively editable from the start).
-4. Paste (`Ctrl+V`) into the email body — formatting is preserved because
-   it's HTML, not plain text.
-5. Fill in `To`, `Subject`, and your signature placeholder, then send.
+**Outlook (classic/desktop) — alternative, no drag-and-drop needed:**
+1. Double-click the `.eml` to open it as a preview.
+2. On the ribbon: **Message → Actions → Edit Message** (older versions:
+   **Other Actions → Edit Message**).
+3. This unlocks the recipient fields and body for direct editing.
 
-Option B is the most reliable across clients, since it never depends on an
-"edit a received message" feature that not every client exposes.
+**New Outlook / OWA (no "Edit Message" option exposed):**
+1. Drag the `.eml` into the Drafts folder the same way as above — this is
+   the only reliable method, since new Outlook does not expose "Edit
+   Message" for previewed `.eml` files.
+
+**Thunderbird:**
+1. Drag the `.eml` into any folder in your mailbox, then right-click the
+   imported message → **Edit as New Message**.

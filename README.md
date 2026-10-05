@@ -164,7 +164,7 @@ not implemented until the CyberArk interface and authentication mechanism are co
 | [`docs/deployment.md`](docs/deployment.md) | Hosting and deployment notes |
 | [`docs/troubleshooting.md`](docs/troubleshooting.md) | Common issues |
 | [`docs/adr/`](docs/adr/) | Architecture Decision Records |
-| [`docs/email/`](docs/email/) | Stakeholder-facing architecture overview email template (.eml + editable HTML, see [`docs/email/README.md`](docs/email/README.md)) |
+| [`docs/email/`](docs/email/) | Stakeholder-facing architecture overview email (.eml, see [`docs/email/README.md`](docs/email/README.md) for how to make it editable in your mail client) |
 
 ## 🤝 Contributing
 
