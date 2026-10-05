@@ -1,0 +1,3 @@
+# .eml files must keep their exact bytes (including LF line endings), since
+# Outlook's X-Unsent draft-detection is sensitive to line-ending normalization.
+*.eml -text
