@@ -68,6 +68,55 @@ Any gate failure stops the chain. No gate is skippable by configuration for the 
 operation (see `docs/authentication.md` §5 for why LogCollector's optional-Graph-validation pattern
 is explicitly not carried over here).
 
+## 2a. Why the Intune enrollment certificate alone is not a sufficient control
+
+The Intune enrollment/device certificate reused from LogCollector (`docs/authentication.md` §1, §3)
+establishes **one thing only**: that the TLS peer holds the private key of *a* certificate issued by
+the Intune enrollment CA, carrying *some* GUID in a known field (OID `1.2.840.113556.5.25`, per
+`docs/certificate-options.md`). By itself that certificate proves:
+
+- possession of a private key;
+- that the key was issued by a CA the Broker is configured to trust;
+- a candidate device-identifier string extracted from a fixed, verified field (never a substring).
+
+It proves **nothing else** — not that the device is still enrolled, still enabled, still managed,
+still compliant, or that the candidate identifier actually corresponds to a real device the
+operation is allowed to target. `docs/certificate-options.md` §4 explicitly says the OID mapping is
+"a selection criterion, not proof." Treating certificate validation as sufficient authorization would
+mean a stolen-but-still-cryptographically-valid certificate (e.g. from a retired, wiped, or
+decommissioned device whose cert hasn't expired yet) could unlock a credential. This is why every
+item below is layered **on top of**, not instead of, the certificate check — each one closes a gap
+the certificate alone leaves open:
+
+| Gap left open by the certificate alone | Compensating control added in this repository | Where |
+|---|---|---|
+| Cert could belong to a device that no longer exists/is disabled in Entra | Independent, mandatory, uncached, fail-closed `EntraDeviceDirectoryValidator` Graph lookup — **not optional**, unlike LogCollector's `EntraDeviceValidation__Enabled` toggle | `src/DeviceCredentialBroker.Graph/CompositeDeviceDirectoryValidator.cs`, `docs/device-validation.md` |
+| Cert says nothing about current Intune management/compliance state | `IntuneManagedDeviceValidator`, policy-gated via `RequireIntuneManagedDevice`/`RequireCompliantDevice`, both of which — once enabled — cannot be silently bypassed (fixed post-review: compliance check no longer skippable when only `RequireCompliantDevice=true` is set) | `src/DeviceCredentialBroker.Graph/CompositeDeviceDirectoryValidator.cs` |
+| Client-reported fields (hostname, serial number) are untrusted claims, not identity | Cross-correlation of certificate-derived GUID ↔ Entra device ID ↔ Intune device ID ↔ reported serial/hostname; mismatches deny the request (anti-IDOR, prompt §11) | `src/DeviceCredentialBroker.Authentication/DeviceIdentityResolver.cs` |
+| Certificate auth says nothing about whether *this* device is allowed to do *this* operation right now | Dedicated `IDeviceOperationAuthorizationService` gate, evaluated only after directory validation succeeds, with its own server-side `Denied(reasonCode)` — a capability LogCollector has no equivalent of (it never discloses secrets) | `src/DeviceCredentialBroker.Application/DeviceOperationAuthorizationService.cs` |
+| A captured, still-valid signed request could be resent | `DCB-SIGNATURE-V1` canonical-request signing + short-lived nonce, reserved atomically (`TryClaimRequestIdAsync`), timestamp-skew rejection | `src/DeviceCredentialBroker.Authentication/ReplayProtector.cs`, `RequestSignature.cs` |
+| Two concurrent requests with the same request ID could both pass a naive duplicate check and both retrieve a credential | Atomic claim via `ConcurrentDictionary.TryAdd` closes the check-then-act race identified in rubber-duck review | `src/DeviceCredentialBroker.Application/ICredentialLeaseStore.cs` |
+| Repeated/abnormal request patterns from one device | `IAbuseDetector` rate limiting and anomaly flags, independent of whether the certificate/Graph checks individually pass | `src/DeviceCredentialBroker.Application/` |
+| Graph or CyberArk being unreachable could be misread as "nothing to check, allow" | Fail-closed on every external dependency — an infrastructure failure is never converted into an authorization success (prompt §8, §27) | `docs/device-validation.md` §"Fail-closed behavior" |
+
+**Net effect:** the certificate is the *authentication* factor (proves identity of the TLS peer); the
+Graph/Intune checks, identity cross-correlation, and authorization service together form the
+*authorization* decision. The architecture treats "certificate valid" as necessary but explicitly
+insufficient — the "Major security principle" in prompt §2 ("treat possession of the API URL/cert as
+meaningless until *all* gates pass") is implemented as a hard, unconditional pipeline, not a
+configurable preference.
+
+**What is still an open, honestly-documented residual risk** (not solved, and not claimed to be
+solved): a certificate alone remains sufficient to *start* the pipeline, and `docs/adr/0002` leaves
+open whether the Intune enrollment certificate is strong enough evidence on its own vs. a
+corporate-PKI-issued certificate for production use — see `docs/certificate-options.md` and ADR 0002
+for the comparison and the open questions that require customer/PKI-team validation before a final
+choice. Additionally, `docs/adr/0003` documents that returning a reusable password to the endpoint
+at all (architecture A, implemented) carries residual memory-exposure risk that no amount of
+pre-issuance validation eliminates — architecture B (server-side execution without ever exposing the
+password) is documented there as a future alternative, not implemented now per the explicit current
+requirement.
+
 ## 3. Device → Broker sequence — **PROPOSED DESIGN**
 
 ```text

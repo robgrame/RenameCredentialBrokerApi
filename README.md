@@ -152,7 +152,7 @@ not implemented until the CyberArk interface and authentication mechanism are co
 
 | Doc | Covers |
 |---|---|
-| [`docs/architecture.md`](docs/architecture.md) | End-to-end design, sequence diagrams, authorization model |
+| [`docs/architecture.md`](docs/architecture.md) | End-to-end design, sequence diagrams, authorization model, and §2a: why certificate authentication alone is not sufficient and what compensates for it |
 | [`docs/authentication.md`](docs/authentication.md) | Certificate profiles, selection criteria, mTLS validation |
 | [`docs/certificate-options.md`](docs/certificate-options.md) | Intune enrollment vs. corporate PKI certificate comparison |
 | [`docs/device-validation.md`](docs/device-validation.md) | Microsoft Graph / Entra ID / Intune validation strategy |
