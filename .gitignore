@@ -1,0 +1,31 @@
+## .NET build artifacts
+bin/
+obj/
+*.user
+*.suo
+
+## Test results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+## Visual Studio / Rider
+.vs/
+.idea/
+*.DotSettings.user
+
+## Bicep generated ARM output (kept out of source control; regenerate with az bicep build)
+infra/**/*.json
+!infra/**/parameters/*.json
+
+## OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+
+## Secrets / local overrides (never commit real credentials)
+appsettings.*.local.json
+*.pfx
+*.pem
+*.key
