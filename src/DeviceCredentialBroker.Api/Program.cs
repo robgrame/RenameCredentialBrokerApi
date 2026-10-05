@@ -40,6 +40,8 @@ builder.Services.AddSingleton<SignedRequestAuthenticator>();
 
 builder.Services.AddSingleton<IGraphClientFactory>(_ => new ManagedIdentityGraphClientFactory(
     builder.Configuration["Graph:ManagedIdentityClientId"]));
+builder.Services.AddSingleton<EntraDeviceDirectoryValidator>();
+builder.Services.AddSingleton<IntuneManagedDeviceValidator>();
 builder.Services.AddSingleton<IDeviceDirectoryValidator, CompositeDeviceDirectoryValidator>();
 
 builder.Services.AddSingleton<IAbuseDetector, InMemoryAbuseDetector>();
